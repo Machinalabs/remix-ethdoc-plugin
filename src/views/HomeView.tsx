@@ -9,6 +9,7 @@ export const HomeView: React.FC = () => {
   const [isPublishing, setIsPublishing] = useState(false);
   const [htmlDocumentation, setHtmlDocumentation] = useState("");
   const [hasErrorOnPublishing, setHasErrorOnPublishing] = useState(false);
+  const [publishedURL, setPublishedURL] = useState("");
   const clearMessageFuncRef = useRef(undefined as any);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export const HomeView: React.FC = () => {
         const url = `https://ipfs.io/ipfs/${hash}`;
 
         window.open(url);
+        setPublishedURL(url);
       } catch (error) {
         if (retries < maxNumberOfRetries) {
           console.log("Retrying...");
@@ -82,6 +84,7 @@ export const HomeView: React.FC = () => {
                       }
                       aria-pressed="false"
                       onClick={() => {
+                        setPublishedURL("");
                         setActiveItem(item);
                         displayDocumentation(
                           clientInstance,
@@ -104,15 +107,17 @@ export const HomeView: React.FC = () => {
                   onClick={() => {
                     setContracts(new Map());
                     displayDocumentation(clientInstance, "", "");
+                    setPublishedURL("");
                   }}
                 >
                   Clear
                 </button>
               </div>
-              <div style={{ width: "16em" }}>
+              <div>
                 {activeItem !== "" && (
                   <PublishButton
                     isPublishing={isPublishing}
+                    item={activeItem}
                     onClick={() => {
                       console.log("Is publishing");
                       setIsPublishing(true);
@@ -120,6 +125,15 @@ export const HomeView: React.FC = () => {
                   />
                 )}
               </div>
+              {!isPublishing && publishedURL !== "" && (
+                <>
+                  <div className="small mt-1">
+                    <a rel="noreferrer" href={publishedURL} target="_blank">
+                      {publishedURL}
+                    </a>
+                  </div>
+                </>
+              )}
 
               {hasErrorOnPublishing && (
                 <div>
@@ -137,11 +151,13 @@ export const HomeView: React.FC = () => {
 interface PublishButtonProps {
   isPublishing: boolean;
   onClick: any;
+  item: string;
 }
 
 export const PublishButton: React.FC<PublishButtonProps> = ({
   isPublishing,
   onClick,
+  item,
 }) => {
   return (
     <button
@@ -150,7 +166,7 @@ export const PublishButton: React.FC<PublishButtonProps> = ({
       disabled={isPublishing}
       onClick={onClick}
     >
-      {!isPublishing && "Publish"}
+      {!isPublishing && <span>Publish {item}</span>}
 
       {isPublishing && (
         <div
