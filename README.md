@@ -7,3 +7,7 @@ A plugin to generate documentation for Solidity projects
 <img src="https://res.cloudinary.com/de5hzq1b0/image/upload/v1601100658/remix-plugins/ethdoc-gif_qqltbh.gif" alt="drawing" width="100%"/>
 
 Full documentation https://remix-ethdoc-plugin.readthedocs.io/en/latest
+
+## Development
+
+`yarn start`
